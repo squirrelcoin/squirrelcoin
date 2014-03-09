@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
 // Copyright (c) 2013 DogeCoin Developers
-// Copyright (c) 2013-2014 MediterraneanCoin Developers
+// Copyright (c) 2013-2014 squirrelCoin Developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -36,7 +36,7 @@ unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
 uint256 hashGenesisBlock("0x61bcf5b118ff2a3e823d3b9822c9be915cef9b5cc429e859bb4d8c121a034eef");
-static CBigNum bnProofOfWorkLimit(~uint256(0) >> 23); // Mediterraneancoin: starting difficulty is 1 / 2^12 ; // ~uint256(0) >> 20
+static CBigNum bnProofOfWorkLimit(~uint256(0) >> 23); // squirrelcoin: starting difficulty is 1 / 2^12 ; // ~uint256(0) >> 20
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
 uint256 nBestChainWork = 0;
@@ -69,7 +69,7 @@ map<uint256, set<uint256> > mapOrphanTransactionsByPrev;
 // Constant stuff for coinbase transactions we create:
 CScript COINBASE_FLAGS;
 
-const string strMessageMagic = "Mediterraneancoin Signed Message:\n";
+const string strMessageMagic = "squirrelcoin Signed Message:\n";
 
 double dHashesPerSec = 0.0;
 int64 nHPSTimerStart = 0;
@@ -360,7 +360,7 @@ unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
 
 bool CTxOut::IsDust() const
 {
-    // Mediterraneancoin: IsDust() detection disabled, allows any valid dust to be relayed.
+    // squirrelcoin: IsDust() detection disabled, allows any valid dust to be relayed.
     // The fees imposed on each dust txo is considered sufficient spam deterrant. 
     return false;
 }
@@ -624,7 +624,7 @@ int64 CTransaction::GetMinFee(unsigned int nBlockSize, bool fAllowFree,
         }
     }
 
-    // Mediterraneancoin
+    // squirrelcoin
     // To limit dust spam, add nBaseFee for each output less than DUST_SOFT_LIMIT
     BOOST_FOREACH(const CTxOut& txout, vout)
         if (txout.nValue < DUST_SOFT_LIMIT)
@@ -1096,7 +1096,7 @@ int static generateMTRandom(unsigned int s, int range)
 int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
 {
 /*
-    int64 nSubsidy;// = 7 * COIN; // it was 50
+    int64 nSubsidy;// = 16 * COIN; // it was 7
 
     if (nHeight <= 10000)
     	nSubsidy = 1 * COIN / 10;
@@ -1126,10 +1126,10 @@ int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
     	nSubsidy = 233 * COIN / 10;
 
     // Subsidy is cut in half every 1036800 blocks, which will occur approximately every 2 years
-    nSubsidy >>= (nHeight / 1036800); // Mediterraneancoin: 518k blocks in ~1 year
+    nSubsidy >>= (nHeight / 1036800); // squirrelcoin: 518k blocks in ~1 year
 */
 
-    int64 nSubsidy = 20 * COIN;
+    int64 nSubsidy = 32 * COIN;
 
     std::string cseed_str = prevHash.ToString().substr(7,7);
     const char* cseed = cseed_str.c_str();
@@ -1186,15 +1186,15 @@ int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
             nSubsidy = (1 + rand5) * COIN;
     }
 
-    nSubsidy >>= (nHeight / 1036800); // Mediterraneancoin: 518k blocks in ~1 year
+    nSubsidy >>= (nHeight / 1036800); // squirrelcoin: 518k blocks in ~1 year
 
 return nSubsidy + nFees;
 
 
 }
 
-static const int64 nTargetTimespan = 24 * 60 * 60 * 1 / 4; // Mediterraneancoin: 0.25 days
-static const int64 nTargetSpacing = 1 * 60; // Mediterraneancoin: 1.0 minutes
+static const int64 nTargetTimespan = 24 * 60 * 60 * 1 / 2; // squirrelcoin: 0.5 days
+static const int64 nTargetSpacing = 120; // squirrelcoin: 2.0 minutes
 static const int64 nInterval = nTargetTimespan / nTargetSpacing;
 
 //
@@ -1253,7 +1253,7 @@ unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBl
         return pindexLast->nBits;
     }
 
-    // Mediterraneancoin: This fixes an issue where a 51% attack can change difficulty at will.
+    // squirrelcoin: This fixes an issue where a 51% attack can change difficulty at will.
     // Go back the full period unless it's the first retarget after genesis. Code courtesy of Art Forz
     int blockstogoback = nInterval-1;
     if ((pindexLast->nHeight+1) != nInterval)
@@ -2218,7 +2218,7 @@ bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerk
     if (vtx.empty() || vtx.size() > MAX_BLOCK_SIZE || ::GetSerializeSize(*this, SER_NETWORK, PROTOCOL_VERSION) > MAX_BLOCK_SIZE)
         return state.DoS(100, error("CheckBlock() : size limits failed"));
 
-    // Mediterraneancoin: Special short-term limits to avoid 10,000 BDB lock limit:
+    // squirrelcoin: Special short-term limits to avoid 10,000 BDB lock limit:
     if (GetBlockTime() < 1376568000)  // stop enforcing 15 August 2013 00:00:00
     {
         // Rule is: #unique txids referenced <= 4,500
@@ -2378,7 +2378,7 @@ bool CBlock::AcceptBlock(CValidationState &state, CDiskBlockPos *dbp)
 
 bool CBlockIndex::IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned int nRequired, unsigned int nToCheck)
 {
-    // Mediterraneancoin: temporarily disable v2 block lockin until we are ready for v2 transition
+    // squirrelcoin: temporarily disable v2 block lockin until we are ready for v2 transition
     return false;
     unsigned int nFound = 0;
     for (unsigned int i = 0; i < nToCheck && nFound < nRequired && pstart != NULL; i++)
@@ -2900,7 +2900,7 @@ bool InitBlockIndex() {
         //   vMerkleTree: 97ddfbbae6
 
         // Genesis block
-        const char* pszTimestamp = "12/14/2013 10:03 AM Members of the governing African National Congress pay final tributes to Nelson Mandela";
+        const char* pszTimestamp = "3/8/14 Neil deGrasse Tyson took the stage at SXSW on March 8 to discuss science, technology, education and what he called “the cosmic perspective";
         CTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -2913,14 +2913,14 @@ bool InitBlockIndex() {
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1387020300; // 1380408161079
+        block.nTime    = 1394333659; // 1394333659
         block.nBits    = 0x1d0ffff0;
         block.nNonce   = 0x13b3fca2; // a2fcb313; //330562722;
         //
 
         if (fTestNet)
         {
-            block.nTime    = 1387020100;
+            block.nTime    = 1394333659;
             block.nNonce   = 272615450;
         }
 
@@ -3245,7 +3245,7 @@ bool static AlreadyHave(const CInv& inv)
 // The message start string is designed to be unlikely to occur in normal data.
 // The characters are rarely used upper ASCII, not valid as UTF-8, and produce
 // a large 4-byte int at any alignment.
-unsigned char pchMessageStart[4] = { 0xfb, 0xc0, 0xb6, 0xdb }; // Mediterraneancoin: increase each by adding 2 to bitcoin's value.
+unsigned char pchMessageStart[4] = { 0xfb, 0xc0, 0xb6, 0xdb }; // squirrelcoin: increase each by adding 2 to bitcoin's value.
 
 
 void static ProcessGetData(CNode* pfrom)
@@ -4241,7 +4241,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// MediterraneancoinMiner
+// squirrelcoinMiner
 //
 
 int static FormatHashBlocks(void* pbuffer, unsigned int len)
@@ -4647,7 +4647,7 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
 
     if (hash > hashTarget) {
-        printf("Mediterraneancoin RPCMiner:\n");
+        printf("squirrelcoin RPCMiner:\n");
         printf("proof-of-work NOT found  \n  hash: %s  \ntarget: %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
         pblock->print();
 
@@ -4655,7 +4655,7 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     }
 
     //// debug print
-    printf("Mediterraneancoin RPCMiner:\n");
+    printf("squirrelcoin RPCMiner:\n");
     printf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
     pblock->print();
     printf("generated %s\n", FormatMoney(pblock->vtx[0].vout[0].nValue).c_str());
@@ -4664,7 +4664,7 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     {
         LOCK(cs_main);
         if (pblock->hashPrevBlock != hashBestChain)
-            return error("MediterraneancoinMiner : generated block is stale");
+            return error("squirrelcoinMiner : generated block is stale");
 
         // Remove key from key pool
         reservekey.KeepKey();
@@ -4678,7 +4678,7 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
         // Process this block the same as if we had received it from another node
         CValidationState state;
         if (!ProcessBlock(state, NULL, pblock))
-            return error("MediterraneancoinMiner : ProcessBlock, block not accepted");
+            return error("squirrelcoinMiner : ProcessBlock, block not accepted");
     }
 
     return true;

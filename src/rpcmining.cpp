@@ -92,10 +92,10 @@ Value getworkex(const Array& params, bool fHelp)
         );
 
     if (vNodes.empty())
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Mediterraneancoin is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Squirrelcoin is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Mediterraneancoin is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Squirrelcoin is downloading blocks...");
 
     if (pMiningKey == NULL)
     	throw JSONRPCError(RPC_CLIENT_SERVER_NOT_RUNNING, "startup option '-server=true' is required!");
@@ -235,10 +235,10 @@ Value getwork(const Array& params, bool fHelp)
             "If [data] is specified, tries to solve the block and returns true if it was successful.");
 
     if (vNodes.empty())
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Mediterraneancoin is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Squirrelcoin is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Mediterraneancoin is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Squirrelcoin is downloading blocks...");
 
     if (pMiningKey == NULL)
     	throw JSONRPCError(RPC_CLIENT_SERVER_NOT_RUNNING, "startup option '-server=true' is required!");
@@ -379,10 +379,10 @@ Value getblocktemplate(const Array& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid mode");
 
     if (vNodes.empty())
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Mediterraneancoin is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Squirrelcoin is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Mediterraneancoin is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Squirrelcoin is downloading blocks...");
 
     if (pMiningKey == NULL)
     	throw JSONRPCError(RPC_CLIENT_SERVER_NOT_RUNNING, "startup option '-server=true' is required!");
